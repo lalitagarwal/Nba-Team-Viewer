@@ -34,8 +34,8 @@ class PlayerListAdapter(
             }
 
             holder.tvName.text = context?.getString(R.string.player_name, player.firstName, player.lastName)
-            holder.tvPosition.text = player.position
-            holder.tvNumber.text = player.number.toString()
+            holder.tvPosition.text = context?.getString(R.string.player_position, player.position)
+            holder.tvNumber.text = context?.getString(R.string.player_number, player.number.toString())
         }
     }
 
