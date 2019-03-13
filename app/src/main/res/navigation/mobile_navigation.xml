@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mobile_navigation"
+            app:startDestination="@id/teamListFragment">
+
+    <fragment android:id="@+id/teamListFragment"
+              android:name="android.sample.nbateamviewer.ui.fragment.TeamListFragment"
+              android:label="TeamListFragment">
+
+        <action
+                android:id="@+id/action_team_list_to_team_page"
+                app:destination="@id/teamPageFragment"
+                app:popUpTo="@id/teamListFragment"
+        />
+    </fragment>
+
+    <fragment android:id="@+id/teamPageFragment"
+              android:name="android.sample.nbateamviewer.ui.fragment.TeamPageFragment"
+              android:label="TeamPageFragment">
+        <argument
+                android:name="teamClicked"
+                app:argType="integer"
+                android:defaultValue="0"
+        />
+
+    </fragment>
+
+</navigation>
