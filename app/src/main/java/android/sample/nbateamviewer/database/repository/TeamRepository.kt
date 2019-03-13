@@ -9,6 +9,14 @@ import java.io.InputStreamReader
 
 open class TeamRepository(private val nbaViewerDatabase: NbaViewerDatabase) {
 
+    fun addTeam(team: Team) {
+        nbaViewerDatabase.teamDao().insert(team)
+    }
+
+    fun addPlayer(player: Player) {
+        nbaViewerDatabase.playerDao().insert(player)
+    }
+
     fun getTeamsFromDB(): List<Team> {
         return nbaViewerDatabase.teamDao().getTeams()
     }
@@ -21,14 +29,6 @@ open class TeamRepository(private val nbaViewerDatabase: NbaViewerDatabase) {
 
     fun getTeamForGivenId(teamId: Int): Team {
         return nbaViewerDatabase.teamDao().getTeamForGivenId(teamId)
-    }
-
-    fun addTeam(team: Team) {
-        nbaViewerDatabase.teamDao().insert(team)
-    }
-
-    fun addPlayer(player: Player) {
-        nbaViewerDatabase.playerDao().insert(player)
     }
 
     fun getPlayersForTeamId(teamId: Int): List<Player> {

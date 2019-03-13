@@ -83,6 +83,17 @@ class TeamListFragment : Fragment(), TeamListContractor.View {
         presenter?.setList()
     }
 
+    override fun setRecyclerView(teamList: List<Team>) {
+        rv_team_list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        val adapter = TeamListAdapter(context, teamList)
+        rv_team_list.adapter = adapter
+    }
+
+    override fun updateListView(teamList: List<Team>) {
+        (rv_team_list.adapter as TeamListAdapter).updateItems(teamList)
+        rv_team_list.adapter?.notifyDataSetChanged()
+    }
+
     override fun resetSortUI(items: List<String>) {
         for (item in items) {
             when (item) {
@@ -99,17 +110,6 @@ class TeamListFragment : Fragment(), TeamListContractor.View {
                 }
             }
         }
-    }
-
-    override fun updateListView(teamList: List<Team>) {
-        (rv_team_list.adapter as TeamListAdapter).updateItems(teamList)
-        rv_team_list.adapter?.notifyDataSetChanged()
-    }
-
-    override fun setRecyclerView(teamList: List<Team>) {
-        rv_team_list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        val adapter = TeamListAdapter(context, teamList)
-        rv_team_list.adapter = adapter
     }
 
     override fun getAssets(): AssetManager? {

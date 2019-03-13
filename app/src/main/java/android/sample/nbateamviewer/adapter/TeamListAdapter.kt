@@ -17,11 +17,6 @@ class TeamListAdapter(
     private var itemList: List<Team>?
 ) : RecyclerView.Adapter<TeamListAdapter.ItemViewHolder>() {
 
-    fun updateItems(teams: List<Team>) {
-        itemList = listOf()
-        itemList = teams
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_team_layout, parent, false)
         return ItemViewHolder(view)
@@ -38,11 +33,16 @@ class TeamListAdapter(
             holder.tvWins.text = context?.getString(R.string.team_wins, team.wins.toString())
             holder.tvLosses.text = context?.getString(R.string.team_losses, team.losses.toString())
 
-            val bundle = bundleOf("teamClicked" to team.id)
+            val bundle = bundleOf("teamClickedId" to team.id)
             holder.itemView.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_team_list_to_team_page, bundle)
             )
         }
+    }
+
+    fun updateItems(teams: List<Team>) {
+        itemList = listOf()
+        itemList = teams
     }
 
     class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {

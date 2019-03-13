@@ -28,7 +28,7 @@ class TeamPageFragment : Fragment(), TeamPageContractor.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val teamId = arguments?.get("teamClicked") as Int
+        val teamId = arguments?.get("teamClickedId") as Int
         val repository = TeamRepository((activity?.applicationContext as NbaViewerApplication).nbaViewerDatabase)
         presenter = TeamPagePresenter(this, repository, teamId, Dispatchers.Main, Dispatchers.IO)
         presenter?.setList()
@@ -39,20 +39,20 @@ class TeamPageFragment : Fragment(), TeamPageContractor.View {
         rv_team_list?.adapter = PlayerListAdapter(context, playersList)
     }
 
-    override fun showLoader() {
-        pb_loading.show()
-    }
-
-    override fun hideLoader() {
-        pb_loading.hide()
-    }
-
     override fun updateTeamData(team: Team?) {
         team?.let {
             tv_team_name.text = team.name
             tv_team_wins.text = getString(R.string.team_wins, team.wins.toString())
             tv_team_losses.text = getString(R.string.team_losses, team.losses.toString())
         }
+    }
+
+    override fun showLoader() {
+        pb_loading.show()
+    }
+
+    override fun hideLoader() {
+        pb_loading.hide()
     }
 
     override fun showToastMsg(msg: Int) {

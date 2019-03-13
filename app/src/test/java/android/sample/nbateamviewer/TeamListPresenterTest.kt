@@ -8,7 +8,6 @@ import android.sample.nbateamviewer.model.Player
 import android.sample.nbateamviewer.model.Team
 import android.sample.nbateamviewer.ui.contract.TeamPageContractor
 import android.sample.nbateamviewer.ui.presenter.TeamPagePresenter
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
