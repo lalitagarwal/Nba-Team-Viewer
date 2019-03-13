@@ -9,7 +9,8 @@ import android.sample.nbateamviewer.ui.fragment.TeamListFragment.Companion.LOSSE
 import android.sample.nbateamviewer.ui.fragment.TeamListFragment.Companion.NAME_SORT
 import android.sample.nbateamviewer.ui.fragment.TeamListFragment.Companion.WINS_SORT
 import android.sample.nbateamviewer.ui.presenter.TeamListPresenter
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Unconfined
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -36,12 +37,13 @@ class TeamPagePresenterTest {
     @Mock
     private lateinit var mockTeamDao: TeamDao
 
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
         teamRepository = TeamRepository(mockDatabase)
         teamListPresenter =
-            TeamListPresenter(mockTeamListFragment, teamRepository, Dispatchers.Unconfined, Dispatchers.Unconfined)
+            TeamListPresenter(mockTeamListFragment, teamRepository, Unconfined, Unconfined)
     }
 
     @Test
