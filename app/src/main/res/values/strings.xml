@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">NBA Team Viewer</string>
+
+    //Team
+    <string name="team_list">Team List</string>
+    <string name="team_wins">Wins: %1$s</string>
+    <string name="team_losses">Losses: %1$s</string>
+
+    //Player
+    <string name="player_number">Number:\u0020</string>
+    <string name="player_position">Position:\u0020</string>
+    <string name="player_image">Player Image</string>
+    <string name="player_name">%1$s %2$s</string>
+
+    //Sort
+    <string name="sort_name_asc">Name- Asc</string>
+    <string name="sort_name_desc">Name- Desc</string>
+    <string name="sort_wins_asc">Win- Asc</string>
+    <string name="sort_wins_desc">Win- Desc</string>
+    <string name="sort_losses_asc">Loss- Asc</string>
+    <string name="sort_losses_desc">Loss- Desc</string>
+
+    //Errors
+    <string name="error_msg">Unable to load data. Please Try again.</string>
+</resources>
