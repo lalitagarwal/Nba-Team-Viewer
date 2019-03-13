@@ -9,15 +9,14 @@ import android.sample.nbateamviewer.ui.fragment.TeamListFragment.Companion.WINS_
 import android.sample.nbateamviewer.model.Team
 import android.sample.nbateamviewer.database.repository.TeamRepository
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.Exception
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 class TeamListPresenter(
     private val view: TeamListContractor.View,
-    private val repository: TeamRepository
+    private val repository: TeamRepository,
+    private val mainContext: CoroutineContext,
+    private val IOContext: CoroutineContext
 ) :
     TeamListContractor.Presenter {
 
@@ -26,13 +25,14 @@ class TeamListPresenter(
     private var sortComparator: Comparator<Team>? = null
 
     override fun setList() {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    view.showLoader()
-                    getTeams()
-                }
+        val teamsDeferred: Deferred<List<Team>> = CoroutineScope(IOContext).async {
+            getTeams()
+        }
 
+        CoroutineScope(mainContext).launch {
+            view.showLoader()
+            try {
+                sortedTeams = teamsDeferred.await()
                 view.hideLoader()
                 sortedTeams?.let {
                     view.setRecyclerView(it)
@@ -45,7 +45,7 @@ class TeamListPresenter(
         }
     }
 
-    private fun getTeams() {
+    private fun getTeams(): List<Team> {
         var teams = repository.getTeamsFromDB()
         if (teams.isNullOrEmpty()) {
             teams = repository.getTeamsFromJsonFile(view.getAssets())
@@ -62,6 +62,7 @@ class TeamListPresenter(
 
         }
         sortedTeams = teams.sortedWith(compareBy { it.name })
+        return sortedTeams ?: listOf()
     }
 
     override fun setComparator(criteria: String, sortType: Int) {

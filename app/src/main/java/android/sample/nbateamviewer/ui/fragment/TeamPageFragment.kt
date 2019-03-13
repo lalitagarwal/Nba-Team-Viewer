@@ -6,6 +6,7 @@ import android.sample.nbateamviewer.R
 import android.sample.nbateamviewer.ui.contract.TeamPageContractor
 import android.sample.nbateamviewer.ui.presenter.TeamPagePresenter
 import android.sample.nbateamviewer.adapter.PlayerListAdapter
+import android.sample.nbateamviewer.database.repository.TeamRepository
 import android.sample.nbateamviewer.model.Player
 import android.sample.nbateamviewer.model.Team
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_team_page.*
+import kotlinx.coroutines.Dispatchers
 
 class TeamPageFragment : Fragment(), TeamPageContractor.View {
     private var presenter: TeamPageContractor.Presenter? = null
@@ -27,8 +29,8 @@ class TeamPageFragment : Fragment(), TeamPageContractor.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val teamId = arguments?.get("teamClicked") as Int
-        val repository = (activity?.applicationContext as NbaViewerApplication).repository
-        presenter = TeamPagePresenter(this, repository, teamId)
+        val repository = TeamRepository((activity?.applicationContext as NbaViewerApplication).nbaViewerDatabase)
+        presenter = TeamPagePresenter(this, repository, teamId, Dispatchers.Main, Dispatchers.IO)
         presenter?.setList()
     }
 

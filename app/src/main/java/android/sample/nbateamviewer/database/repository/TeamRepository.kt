@@ -7,7 +7,7 @@ import android.sample.nbateamviewer.model.Team
 import com.beust.klaxon.Klaxon
 import java.io.InputStreamReader
 
-class TeamRepository(private val nbaViewerDatabase: NbaViewerDatabase) {
+open class TeamRepository(private val nbaViewerDatabase: NbaViewerDatabase) {
 
     fun getTeamsFromDB(): List<Team> {
         return nbaViewerDatabase.teamDao().getTeams()

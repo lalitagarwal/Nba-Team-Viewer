@@ -7,6 +7,7 @@ import android.sample.nbateamviewer.R
 import android.sample.nbateamviewer.ui.contract.TeamListContractor
 import android.sample.nbateamviewer.ui.presenter.TeamListPresenter
 import android.sample.nbateamviewer.adapter.TeamListAdapter
+import android.sample.nbateamviewer.database.repository.TeamRepository
 import android.sample.nbateamviewer.model.Team
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_team_list.*
+import kotlinx.coroutines.Dispatchers
 
 class TeamListFragment : Fragment(), TeamListContractor.View {
     private var presenter: TeamListContractor.Presenter? = null
@@ -26,10 +28,9 @@ class TeamListFragment : Fragment(), TeamListContractor.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity?.applicationContext as? NbaViewerApplication)?.nbaViewerDatabase?.let {
-        }
-        val repository = (activity?.applicationContext as NbaViewerApplication).repository
-        presenter = TeamListPresenter(this@TeamListFragment, repository)
+
+        val repository = TeamRepository((activity?.applicationContext as NbaViewerApplication).nbaViewerDatabase)
+        presenter = TeamListPresenter(this@TeamListFragment, repository, Dispatchers.Main, Dispatchers.IO)
 
         tv_sort_name.setOnClickListener {
             if (tv_sort_name.text == getString(R.string.sort_name_asc)) {

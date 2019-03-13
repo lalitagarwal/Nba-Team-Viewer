@@ -6,16 +6,16 @@ import android.sample.nbateamviewer.model.Player
 import android.sample.nbateamviewer.model.Team
 import android.sample.nbateamviewer.database.repository.TeamRepository
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
 class TeamPagePresenter(
     private val view: TeamPageContractor.View,
     private val repository: TeamRepository,
-    private val teamId: Int
+    private val teamId: Int,
+    private val mainContext: CoroutineContext,
+    private val IOContext: CoroutineContext
 ) : TeamPageContractor.Presenter {
 
     private val TAG = TeamPagePresenter::class.simpleName
@@ -23,14 +23,17 @@ class TeamPagePresenter(
     private var players: List<Player>? = listOf()
 
     override fun setList() {
-        CoroutineScope(Dispatchers.Main).launch {
+        val teamsDeferred: Deferred<Team> = CoroutineScope(IOContext).async {
+            repository.getTeamForGivenId(teamId)
+        }
+
+        CoroutineScope(mainContext).launch {
+            view.showLoader()
             try {
-                view.showLoader()
-                withContext(Dispatchers.IO) {
-                    team = repository.getTeamForGivenId(teamId)
-                    getPlayerData()
-                }
+                team = teamsDeferred.await()
+                view.hideLoader()
                 view.updateTeamData(team)
+                getPlayerData()
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to fetch teams: ${e.localizedMessage}")
                 view.hideLoader()
@@ -40,17 +43,18 @@ class TeamPagePresenter(
     }
 
     private fun getPlayerData() {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    players = repository.getPlayersForTeamId(teamId)
-                }
+        val playerDeferred: Deferred<List<Player>> = CoroutineScope(IOContext).async {
+            repository.getPlayersForTeamId(teamId)
+        }
 
+        CoroutineScope(mainContext).launch {
+            view.showLoader()
+            try {
+                players = playerDeferred.await()
                 players?.let {
                     view.hideLoader()
                     view.setRecyclerView(it)
                 }
-
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to fetch players: ${e.localizedMessage}")
                 view.hideLoader()
